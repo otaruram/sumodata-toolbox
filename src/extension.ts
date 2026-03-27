@@ -167,7 +167,7 @@ async function executeTool(tool: ToolType): Promise<void> {
         'Code Files': ['py', 'sql', 'ipynb', 'js', 'ts'],
         'All Files': ['*']
       },
-      title: 'Select files to analyze'
+      title: 'Select files to analyze (max 10 files recommended)'
     });
 
     if (!uris || uris.length === 0) {
@@ -175,43 +175,119 @@ async function executeTool(tool: ToolType): Promise<void> {
       return;
     }
 
-    // Read all selected files
-    for (const uri of uris) {
-      const document = await vscode.workspace.openTextDocument(uri);
-      const fileName = uri.fsPath.split(/[\\/]/).pop() || 'unknown';
-      fileContext += `\n\n--- File: ${fileName} ---\n${document.getText()}\n`;
-    }
-
-    code = fileContext;
-    
-    if (uris.length > 1) {
-      vscode.window.showInformationMessage(`Analyzing ${uris.length} files...`);
-    }
-  } else {
-    // Normal Mode - use active editor
-    const editor = vscode.window.activeTextEditor;
-    if (!editor) {
-      vscode.window.showErrorMessage('No active editor. Please open a file or enable Multi-File Mode.');
-      return;
-    }
-
-    const selection = editor.selection;
-    code = editor.document.getText(selection);
-
-    // If no selection, use entire document
-    if (!code || code.trim().length === 0) {
-      const useEntireDoc = await vscode.window.showWarningMessage(
-        'No code selected. Use entire document?',
-        'Yes',
+    // Warn if too many files selected
+    if (uris.length > 10) {
+      const proceed = await vscode.window.showWarningMessage(
+        `You selected ${uris.length} files. This may take a while. Continue?`,
+        'Yes, Continue',
         'Cancel'
       );
       
-      if (useEntireDoc !== 'Yes') {
+      if (proceed !== 'Yes, Continue') {
         return;
       }
-      
-      code = editor.document.getText();
     }
+
+    // Process each file separately
+    await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: `Processing ${uris.length} files with SumoData...`,
+        cancellable: false
+      },
+      async (progress) => {
+        let successCount = 0;
+        let failCount = 0;
+
+        for (let i = 0; i < uris.length; i++) {
+          const uri = uris[i];
+          const fileName = uri.fsPath.split(/[\\/]/).pop() || 'unknown';
+          
+          progress.report({ 
+            message: `Processing ${i + 1}/${uris.length}: ${fileName}`,
+            increment: (100 / uris.length)
+          });
+
+          try {
+            const document = await vscode.workspace.openTextDocument(uri);
+            let fileCode = document.getText();
+
+            // Check max length per file
+            const config = vscode.workspace.getConfiguration('sumodata');
+            const maxLength = config.get<number>('maxCodeLength', 10000);
+            
+            if (fileCode.length > maxLength) {
+              fileCode = fileCode.substring(0, maxLength);
+            }
+
+            const systemPrompt = SYSTEM_PROMPTS[tool];
+            const model = config.get<string>('model', 'claude-haiku-4-5');
+
+            console.log(`[SumoData] Processing file: ${fileName}, Tool: ${tool}, Code length: ${fileCode.length}`);
+            
+            const response = await apiProvider!.sendRequest(systemPrompt, fileCode, model);
+
+            if (response.success && response.data) {
+              console.log(`[SumoData] Success for ${fileName}! Response length: ${response.data.length}`);
+              
+              // Create output file with unique name
+              const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+              const outputFileName = `${tool}-${fileName.replace(/\.[^.]+$/, '')}-${timestamp}.${getFileExtension(tool)}`;
+              
+              const doc = await vscode.workspace.openTextDocument({
+                content: response.data,
+                language: detectLanguage(tool)
+              });
+
+              await vscode.window.showTextDocument(doc, { preview: false });
+              successCount++;
+            } else {
+              console.error(`[SumoData] Error for ${fileName}: ${response.error}`);
+              failCount++;
+            }
+          } catch (error) {
+            console.error(`[SumoData] Exception for ${fileName}:`, error);
+            failCount++;
+          }
+        }
+
+        // Show summary
+        if (successCount > 0) {
+          vscode.window.showInformationMessage(
+            `Completed! ${successCount} file(s) processed successfully${failCount > 0 ? `, ${failCount} failed` : ''}.`
+          );
+        } else {
+          vscode.window.showErrorMessage(`All ${failCount} file(s) failed to process.`);
+        }
+      }
+    );
+    
+    return; // Exit early for multi-file mode
+  }
+
+  // Normal Mode - use active editor (single file)
+  const editor = vscode.window.activeTextEditor;
+  if (!editor) {
+    vscode.window.showErrorMessage('No active editor. Please open a file or enable Multi-File Mode.');
+    return;
+  }
+
+  const selection = editor.selection;
+  code = editor.document.getText(selection);
+
+  // If no selection, use entire document
+  if (!code || code.trim().length === 0) {
+    const useEntireDoc = await vscode.window.showWarningMessage(
+      'No code selected. Use entire document?',
+      'Yes',
+      'Cancel'
+    );
+    
+    if (useEntireDoc !== 'Yes') {
+      return;
+    }
+    
+    code = editor.document.getText();
   }
 
   // Check max length
@@ -286,6 +362,23 @@ function detectLanguage(tool: ToolType): string {
   };
 
   return languageMap[tool] || 'plaintext';
+}
+
+function getFileExtension(tool: ToolType): string {
+  const extensionMap: Record<ToolType, string> = {
+    sqlOptimizer: 'sql',
+    jsonToDDL: 'sql',
+    cronGenerator: 'txt',
+    explainRegex: 'md',
+    pandasCleaner: 'py',
+    sqlExplainer: 'md',
+    generateDocstring: 'py',
+    addTypeHints: 'py',
+    mlBoilerplate: 'py',
+    dataQualityAuditor: 'md'
+  };
+
+  return extensionMap[tool] || 'txt';
 }
 
 export function deactivate() {
