@@ -1,13 +1,66 @@
+# Development files
 .vscode/**
 .vscode-test/**
 src/**
-.gitignore
 tsconfig.json
 **/*.map
 **/*.ts
 !out/**/*.js
+
+# Git files
+.git/**
+.gitignore
+.gitattributes
+
+# Documentation (separate repo)
 docs/**
+
+# Kiro/IDE files
 .kiro/**
+
+# Test files
 test-files/**
+**/*test*.ts
+**/*test*.js
+test-manual.md
+src/test-api.ts
+out/test-api.js
+out/test-api.js.map
+
+# Build scripts
+PUSH_DOCS.sh
+PUSH_EXTENSION.sh
+
+# Development docs (keep only essential)
 DEPLOY.md
 QUICK_START.md
+PUBLISH_GUIDE.md
+
+# Node modules (should be excluded by default but just in case)
+node_modules/**
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Spec files (optional - remove if you want to show your process)
+.kiro/specs/**
+
+# GitHub workflows (not needed in extension)
+.github/**
+
+# Temporary files
+*.tmp
+*.temp
+.cache/**
+
+# VS Code launch/tasks (development only)
+.vscode/launch.json
+.vscode/tasks.json
