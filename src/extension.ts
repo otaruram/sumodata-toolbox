@@ -231,13 +231,17 @@ async function executeTool(tool: ToolType): Promise<void> {
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: 'Processing with SumoData...',
+      title: `Processing with SumoData (${filePickerMode ? 'Multi-File' : 'Single-File'})...`,
       cancellable: false
     },
     async (progress) => {
+      console.log(`[SumoData] Tool: ${tool}, Model: ${model}, Code length: ${code.length}`);
+      
       const response = await apiProvider!.sendRequest(systemPrompt, code, model);
 
       if (response.success && response.data) {
+        console.log(`[SumoData] Success! Response length: ${response.data.length}`);
+        
         // Create new document with result
         const doc = await vscode.workspace.openTextDocument({
           content: response.data,
@@ -252,22 +256,15 @@ async function executeTool(tool: ToolType): Promise<void> {
         // Show action buttons
         const action = await vscode.window.showInformationMessage(
           'Result ready',
-          'Copy to Clipboard',
-          'Insert at Cursor'
+          'Copy to Clipboard'
         );
 
         if (action === 'Copy to Clipboard') {
           await vscode.env.clipboard.writeText(response.data);
           vscode.window.showInformationMessage('Copied to clipboard');
-        } else if (action === 'Insert at Cursor' && !filePickerMode) {
-          const editor = vscode.window.activeTextEditor;
-          if (editor) {
-            editor.edit((editBuilder: vscode.TextEditorEdit) => {
-              editBuilder.insert(editor.selection.active, response.data!);
-            });
-          }
         }
       } else {
+        console.error(`[SumoData] Error: ${response.error}`);
         vscode.window.showErrorMessage(response.error || 'Request failed');
       }
     }
