@@ -8,11 +8,56 @@
 
 **AI-Powered VS Code Extension for Data Engineering, Machine Learning, and Data Science**
 
-Supercharge your data workflow with 9 specialized AI tools powered by Sumopod API. Built for Data Engineers, ML Engineers, Data Analysts, and Data Scientists who want instant code optimization, generation, and documentation.
+Supercharge your data workflow with 10 specialized AI tools powered by Sumopod API. Built for Data Engineers, ML Engineers, Data Analysts, and Data Scientists who want instant code optimization, generation, and quality auditing.
 
-**Perfect for:** Data Engineering | Machine Learning | Data Science | SQL Optimization | Python Development | ML Model Training | Data Analysis | ETL Pipelines | Database Design
+**Perfect for:** Data Engineering | Machine Learning | Data Science | SQL Optimization | Python Development | ML Model Training | Data Analysis | ETL Pipelines | Database Design | Code Quality Auditing
 
-**Keywords:** data engineering tools, machine learning tools, ML engineer, data science, AI code assistant, SQL optimizer, pandas helper, PyTorch tools, scikit-learn, data analyst tools, sumopod extension, AI developer tools, VS Code data tools, database optimization, ETL tools, data pipeline, jupyter notebook, python AI tools
+**Keywords:** data engineering tools, machine learning tools, ML engineer, data science, AI code assistant, SQL optimizer, pandas helper, PyTorch tools, scikit-learn, data analyst tools, sumopod extension, AI developer tools, VS Code data tools, database optimization, ETL tools, data pipeline, jupyter notebook, python AI tools, code quality, data quality auditor, multi-file analysis
+
+---
+
+## 🔥 NEW: Data Quality Auditor (Killer Feature)
+
+**Automatically scan multiple files for data quality issues, performance problems, and anti-patterns!**
+
+✨ **What makes it special:**
+- 📁 **Multi-File Analysis** - Select and analyze multiple Python/SQL files at once
+- 🎯 **Comprehensive Auditing** - Detects critical issues, performance warnings, and best practice violations
+- 📊 **Actionable Reports** - Get specific fixes with line numbers and impact assessment
+- ⚡ **Saves Hours** - Automated code review that would take 30+ minutes manually
+
+**Example Output:**
+```markdown
+## 🔍 Data Quality Audit Report
+
+### ⚠️ Critical Issues (3 found)
+- Reading CSV without error handling - Line 13
+  - Impact: correctness/reliability (will crash on missing file)
+  - Fix: wrap pd.read_csv in try/except, validate file existence
+
+### ⚡ Performance Warnings (3 found)
+- Inefficient Python loop (can be vectorized) - Lines 4-9
+  - Impact: medium for large lists
+  - Fix: use list comprehension or numpy vectorization
+
+### 💡 Best Practice Suggestions (6 found)
+- Add type hints and docstrings - Lines 1-2
+  - Recommendation: annotate parameters/returns
+
+### ✅ Summary
+- Total issues: 12 (3 Critical, 3 Performance, 6 Best Practice)
+- Estimated performance impact: Medium-High
+- Recommended priority: High
+```
+
+**Use Cases:**
+- 🔍 Pre-commit code review automation
+- 🧹 Legacy codebase cleanup and refactoring
+- 📚 Onboarding new team members with quality standards
+- ⚡ Performance bottleneck identification
+- ✅ Best practices enforcement across teams
+
+[Learn more about Data Quality Auditor →](https://otaruram.github.io/sumodata-toolbox-docs/features/overview#data-quality-auditor)
 
 ---
 
@@ -35,14 +80,17 @@ This is an **unofficial, community-powered** extension. Not affiliated with or e
 
 Unlike generic AI assistants, SumoData Toolbox is **specifically built for data professionals**:
 
+- 🔥 **Data Quality Auditor** - Multi-file code analysis with actionable insights (NEW!)
 - ⚡ **One-Click Tools** - No chatty conversations, just instant results
 - 💰 **Token Efficient** - Minimalist prompts save your API quota
-- 🎯 **Specialized** - 9 tools designed for data engineering, ML, and analytics
+- 🎯 **Specialized** - 10 tools designed for data engineering, ML, and analytics
 - 🔒 **BYOK** - Bring Your Own Key, you control costs
 - 🚀 **Fast** - Results in 2-10 seconds
 - 🛠️ **Context-Aware** - Tools appear based on file type (.py, .sql)
+- 📁 **Multi-File Mode** - Analyze multiple files simultaneously
 
 **Use Cases:**
+- Audit code quality across entire data pipelines
 - Optimize slow SQL queries for PostgreSQL, MySQL, SQL Server
 - Clean messy pandas DataFrames
 - Generate ML training loops for PyTorch and scikit-learn
@@ -50,6 +98,7 @@ Unlike generic AI assistants, SumoData Toolbox is **specifically built for data 
 - Convert JSON to database schemas
 - Understand complex regex patterns
 - Generate cron expressions for data pipelines
+- Detect performance bottlenecks and anti-patterns
 
 ---
 
@@ -58,13 +107,38 @@ Unlike generic AI assistants, SumoData Toolbox is **specifically built for data 
 1. **Install** the extension from VS Code Marketplace
 2. **Get API Key** from [sumopod.com](https://sumopod.com)
 3. **Configure** by clicking "⚙️ Configure API Key" in the sidebar
-4. **Select code** and use tools from sidebar or right-click menu
+4. **Enable Multi-File Mode** (optional) - Check the "📁 Multi-File Mode" box for analyzing multiple files
+5. **Select code** and use tools from sidebar or right-click menu
+
+**Pro Tip:** Try the Data Quality Auditor with multi-file mode to scan your entire codebase for issues!
 
 ---
 
-## ✨ Features
+## ✨ Features (10 Tools)
 
-### 📂 Sumo Pipes (Data Engineering)
+### 🔥 Data Quality Auditor (NEW - Killer Feature)
+
+**Comprehensive code quality analysis for data professionals**
+
+Automatically scan Python and SQL files for:
+- ❌ **Critical Issues**: Error handling gaps, type safety problems, data validation missing
+- ⚡ **Performance Warnings**: Inefficient loops, memory issues, slow operations
+- 💡 **Best Practices**: Code style, documentation, maintainability improvements
+
+**Key Benefits:**
+- **Multi-File Support**: Analyze entire modules or projects at once
+- **Actionable Insights**: Specific fixes with line numbers and code examples
+- **Impact Assessment**: Understand severity and priority of each issue
+- **Time Saver**: Automated review that replaces hours of manual work
+
+**Perfect for:**
+- Code review automation before commits
+- Legacy code refactoring and cleanup
+- Team onboarding and standards enforcement
+- Performance optimization identification
+- Production readiness checks
+
+--- 📂 Sumo Pipes (Data Engineering)
 
 #### 1. SQL Optimizer
 Automatically optimize slow SQL queries with indexing suggestions.
@@ -193,6 +267,13 @@ Generate ML training boilerplate code.
 ---
 
 ## 🎯 How to Use
+
+### Multi-File Mode (For Data Quality Auditor)
+1. Open the SumoData sidebar
+2. Check the "📁 Multi-File Mode" checkbox
+3. Click "🔍 Run Quality Audit"
+4. Select multiple files from your workspace
+5. Get comprehensive audit report
 
 ### Method 1: Sidebar (Recommended)
 1. Open a Python or SQL file
@@ -333,32 +414,36 @@ MIT License - See LICENSE file for details
 ## 📊 For Data Professionals
 
 ### Data Engineers
+- **Audit data pipelines** for quality and performance issues
 - Optimize SQL queries for data pipelines
 - Generate database schemas from JSON
 - Create cron expressions for scheduled jobs
-- Improve ETL code quality
+- Improve ETL code quality with automated reviews
 
 ### Data Analysts
+- **Scan analysis scripts** for best practices
 - Clean pandas DataFrames efficiently
 - Understand complex SQL queries
 - Decode regex patterns
-- Analyze data faster
+- Analyze data faster with quality checks
 
 ### ML Engineers
+- **Review ML code** for performance bottlenecks
 - Generate PyTorch/scikit-learn training loops
 - Add type hints to ML code
 - Document models with docstrings
-- Accelerate model development
+- Accelerate model development with quality audits
 
 ### Data Scientists
-- Improve code quality
+- **Audit notebook code** before production
+- Improve code quality across projects
 - Document analysis workflows
 - Optimize data processing
-- Share reproducible code
+- Share reproducible, high-quality code
 
 ---
 
 ## 🔍 Search Keywords
 
-data engineering, machine learning, ML, data science, AI, artificial intelligence, sumopod, SQL optimizer, SQL optimization, database optimization, query optimization, pandas, pandas helper, data cleaning, PyTorch, TensorFlow, scikit-learn, ML training, model training, data analyst, ML engineer, data engineer, data scientist, AI assistant, AI code helper, code generator, code optimization, docstring generator, type hints, type annotations, database schema, DDL generator, cron expression, regex explainer, SQL explainer, ETL tools, data pipeline, data warehouse, jupyter notebook, python tools, SQL tools, database tools, developer tools, productivity tools, VS Code extension, IDE extension, code quality, best practices, automation, workflow, sumopod extension, sumopod tools, AI developer tools, machine learning tools, data science tools
+data engineering, machine learning, ML, data science, AI, artificial intelligence, sumopod, SQL optimizer, SQL optimization, database optimization, query optimization, pandas, pandas helper, data cleaning, PyTorch, TensorFlow, scikit-learn, ML training, model training, data analyst, ML engineer, data engineer, data scientist, AI assistant, AI code helper, code generator, code optimization, docstring generator, type hints, type annotations, database schema, DDL generator, cron expression, regex explainer, SQL explainer, ETL tools, data pipeline, data warehouse, jupyter notebook, python tools, SQL tools, database tools, developer tools, productivity tools, VS Code extension, IDE extension, code quality, code review, automated code review, data quality, quality auditor, multi-file analysis, code analysis, static analysis, best practices, automation, workflow, sumopod extension, sumopod tools, AI developer tools, machine learning tools, data science tools, performance optimization, anti-pattern detection, code refactoring, legacy code, technical debt
 

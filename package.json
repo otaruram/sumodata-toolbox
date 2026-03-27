@@ -41,7 +41,16 @@
     "python tools",
     "SQL tools",
     "AI code helper",
-    "developer tools"
+    "developer tools",
+    "code quality",
+    "code review",
+    "data quality",
+    "quality auditor",
+    "multi-file",
+    "code analysis",
+    "performance",
+    "anti-pattern",
+    "best practices"
   ],
   "repository": {
     "type": "git",

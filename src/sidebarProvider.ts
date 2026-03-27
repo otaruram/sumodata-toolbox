@@ -329,14 +329,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     </div>
   </div>
 
-  <div class="accordion" style="border: 2px solid #00d4ff; border-radius: 4px;">
-    <div class="accordion-header" onclick="toggleAccordion('killer')" style="background: linear-gradient(90deg, rgba(0,212,255,0.1) 0%, rgba(0,212,255,0.05) 100%);">
+  <div class="accordion" style="border: 1px solid var(--vscode-panel-border); border-radius: 4px;">
+    <div class="accordion-header" onclick="toggleAccordion('killer')" style="background: var(--vscode-input-background);">
       <span class="accordion-icon">🔥</span>
-      <span style="font-weight: 700; color: #00d4ff;">Data Quality Auditor</span>
-      <span style="margin-left: auto; font-size: 9px; background: #00d4ff; color: #000; padding: 2px 6px; border-radius: 3px; font-weight: 600;">NEW</span>
+      <span style="font-weight: 700;">Data Quality Auditor</span>
+      <span style="margin-left: auto; font-size: 9px; background: var(--vscode-button-background); color: var(--vscode-button-foreground); padding: 2px 6px; border-radius: 3px; font-weight: 600;">NEW</span>
     </div>
     <div class="accordion-content" id="killer">
-      <button class="tool-button" onclick="executeTool('sumodata.dataQualityAuditor')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600;">
+      <button class="tool-button" onclick="executeTool('sumodata.dataQualityAuditor')" style="background: var(--vscode-button-background); color: var(--vscode-button-foreground); font-weight: 600;">
         🔍 Run Quality Audit
       </button>
       <div style="font-size: 10px; color: var(--vscode-descriptionForeground); margin-top: 6px; padding: 6px; background: var(--vscode-textBlockQuote-background); border-radius: 3px;">
