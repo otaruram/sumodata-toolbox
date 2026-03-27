@@ -131,6 +131,11 @@
         "category": "SumoData"
       },
       {
+        "command": "sumodata.dataQualityAuditor",
+        "title": "🔥 Data Quality Auditor (Multi-File)",
+        "category": "SumoData"
+      },
+      {
         "command": "sumodata.setApiKey",
         "title": "Set API Key",
         "category": "SumoData"

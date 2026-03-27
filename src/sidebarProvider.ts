@@ -34,6 +34,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           vscode.commands.executeCommand('sumodata.openDocs');
           break;
         
+        case 'toggleFilePickerMode':
+          // Store file picker mode state in extension
+          vscode.commands.executeCommand('sumodata.toggleFilePickerMode', data.enabled);
+          break;
+        
         case 'changeModel':
           await vscode.workspace.getConfiguration('sumodata').update(
             'model',
@@ -45,10 +50,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         
         case 'executeTool':
           vscode.commands.executeCommand(data.command);
-          break;
-        
-        case 'sendChat':
-          vscode.window.showInformationMessage('Chat feature coming soon!');
           break;
         
         case 'checkConnection':
@@ -210,48 +211,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       background: var(--vscode-button-secondaryHoverBackground);
     }
 
-    .chat-section {
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px solid var(--vscode-panel-border);
-    }
-
-    .chat-title {
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: #00d4ff;
-    }
-
-    .chat-input {
-      width: 100%;
-      padding: 8px;
-      background: var(--vscode-input-background);
-      color: var(--vscode-input-foreground);
-      border: 1px solid var(--vscode-input-border);
-      border-radius: 3px;
-      font-size: 12px;
-      font-family: inherit;
-      resize: vertical;
-      min-height: 60px;
-    }
-
-    .chat-button {
-      margin-top: 8px;
-      padding: 6px 12px;
-      background: var(--vscode-button-background);
-      color: var(--vscode-button-foreground);
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: 12px;
-      width: 100%;
-    }
-
-    .chat-button:hover {
-      background: var(--vscode-button-hoverBackground);
-    }
-
     .model-select {
       width: 100%;
       padding: 6px 8px;
@@ -292,6 +251,16 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     
     <a class="api-key-link" onclick="setApiKey()">⚙️ Configure API Key</a>
     <a class="api-key-link" onclick="openDocs()" style="margin-top: 4px;">📚 Open Documentation</a>
+    
+    <div style="margin-top: 12px; padding: 8px; background: var(--vscode-input-background); border-radius: 4px;">
+      <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 11px;">
+        <input type="checkbox" id="filePickerMode" onchange="toggleFilePickerMode()" style="cursor: pointer;">
+        <span>📁 Multi-File Mode (select files from workspace)</span>
+      </label>
+      <div id="filePickerInfo" style="display: none; margin-top: 8px; padding: 6px; background: var(--vscode-textBlockQuote-background); border-left: 3px solid #00d4ff; font-size: 10px; color: var(--vscode-descriptionForeground);">
+        ℹ️ Multi-file mode enabled. Tools will prompt you to select files instead of using active editor.
+      </div>
+    </div>
     
     <div style="margin-top: 8px;">
       <label style="font-size: 11px; color: var(--vscode-descriptionForeground);">AI Model:</label>
@@ -360,10 +329,20 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     </div>
   </div>
 
-  <div class="chat-section">
-    <div class="chat-title">QUICK FOLLOW-UP</div>
-    <textarea class="chat-input" placeholder="Ask follow-up questions..." id="chatInput"></textarea>
-    <button class="chat-button" onclick="sendChat()">Ask</button>
+  <div class="accordion" style="border: 2px solid #00d4ff; border-radius: 4px;">
+    <div class="accordion-header" onclick="toggleAccordion('killer')" style="background: linear-gradient(90deg, rgba(0,212,255,0.1) 0%, rgba(0,212,255,0.05) 100%);">
+      <span class="accordion-icon">🔥</span>
+      <span style="font-weight: 700; color: #00d4ff;">Data Quality Auditor</span>
+      <span style="margin-left: auto; font-size: 9px; background: #00d4ff; color: #000; padding: 2px 6px; border-radius: 3px; font-weight: 600;">NEW</span>
+    </div>
+    <div class="accordion-content" id="killer">
+      <button class="tool-button" onclick="executeTool('sumodata.dataQualityAuditor')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600;">
+        🔍 Run Quality Audit
+      </button>
+      <div style="font-size: 10px; color: var(--vscode-descriptionForeground); margin-top: 6px; padding: 6px; background: var(--vscode-textBlockQuote-background); border-radius: 3px;">
+        Scans code for performance issues, anti-patterns, and data quality problems. Works with SQL, Python, and Pandas code.
+      </div>
+    </div>
   </div>
 
   <div class="disclaimer">
@@ -388,6 +367,22 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       vscode.postMessage({ type: 'openDocs' });
     }
 
+    function toggleFilePickerMode() {
+      const checkbox = document.getElementById('filePickerMode');
+      const info = document.getElementById('filePickerInfo');
+      
+      if (checkbox.checked) {
+        info.style.display = 'block';
+      } else {
+        info.style.display = 'none';
+      }
+      
+      vscode.postMessage({ 
+        type: 'toggleFilePickerMode',
+        enabled: checkbox.checked
+      });
+    }
+
     function changeModel() {
       const select = document.getElementById('modelSelect');
       const model = select.value;
@@ -402,19 +397,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         type: 'executeTool',
         command: command
       });
-    }
-
-    function sendChat() {
-      const input = document.getElementById('chatInput');
-      const message = input.value.trim();
-      
-      if (message) {
-        vscode.postMessage({ 
-          type: 'sendChat',
-          message: message
-        });
-        input.value = '';
-      }
     }
 
     window.addEventListener('message', event => {

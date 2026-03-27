@@ -7,6 +7,7 @@ import { SYSTEM_PROMPTS, ToolType } from './prompts';
 let secretManager: SecretManager;
 let apiProvider: ApiProvider | undefined;
 let sidebarProvider: SidebarProvider;
+let filePickerMode = false;
 
 export async function activate(context: vscode.ExtensionContext) {
   console.log('SumoData Toolbox is now active');
@@ -107,6 +108,18 @@ function registerCommands(context: vscode.ExtensionContext): void {
     })
   );
 
+  // Toggle File Picker Mode command
+  context.subscriptions.push(
+    vscode.commands.registerCommand('sumodata.toggleFilePickerMode', (enabled: boolean) => {
+      filePickerMode = enabled;
+      vscode.window.showInformationMessage(
+        filePickerMode 
+          ? '📁 Multi-File Mode enabled. Tools will prompt for file selection.' 
+          : '📝 Single-File Mode enabled. Tools will use active editor.'
+      );
+    })
+  );
+
   // Tool commands
   const tools: Array<{ command: string; tool: ToolType }> = [
     { command: 'sumodata.sqlOptimizer', tool: 'sqlOptimizer' },
@@ -117,7 +130,8 @@ function registerCommands(context: vscode.ExtensionContext): void {
     { command: 'sumodata.sqlExplainer', tool: 'sqlExplainer' },
     { command: 'sumodata.generateDocstring', tool: 'generateDocstring' },
     { command: 'sumodata.addTypeHints', tool: 'addTypeHints' },
-    { command: 'sumodata.mlBoilerplate', tool: 'mlBoilerplate' }
+    { command: 'sumodata.mlBoilerplate', tool: 'mlBoilerplate' },
+    { command: 'sumodata.dataQualityAuditor', tool: 'dataQualityAuditor' }
   ];
 
   tools.forEach(({ command, tool }) => {
@@ -140,28 +154,64 @@ async function executeTool(tool: ToolType): Promise<void> {
     return;
   }
 
-  const editor = vscode.window.activeTextEditor;
-  if (!editor) {
-    vscode.window.showErrorMessage('No active editor. Please open a file and select code.');
-    return;
-  }
+  let code = '';
+  let fileContext = '';
 
-  const selection = editor.selection;
-  let code = editor.document.getText(selection);
+  // File Picker Mode - allow selecting multiple files
+  if (filePickerMode) {
+    const uris = await vscode.window.showOpenDialog({
+      canSelectMany: true,
+      canSelectFiles: true,
+      canSelectFolders: false,
+      filters: {
+        'Code Files': ['py', 'sql', 'ipynb', 'js', 'ts'],
+        'All Files': ['*']
+      },
+      title: 'Select files to analyze'
+    });
 
-  // If no selection, use entire document
-  if (!code || code.trim().length === 0) {
-    const useEntireDoc = await vscode.window.showWarningMessage(
-      'No code selected. Use entire document?',
-      'Yes',
-      'Cancel'
-    );
-    
-    if (useEntireDoc !== 'Yes') {
+    if (!uris || uris.length === 0) {
+      vscode.window.showInformationMessage('No files selected.');
       return;
     }
+
+    // Read all selected files
+    for (const uri of uris) {
+      const document = await vscode.workspace.openTextDocument(uri);
+      const fileName = uri.fsPath.split(/[\\/]/).pop() || 'unknown';
+      fileContext += `\n\n--- File: ${fileName} ---\n${document.getText()}\n`;
+    }
+
+    code = fileContext;
     
-    code = editor.document.getText();
+    if (uris.length > 1) {
+      vscode.window.showInformationMessage(`Analyzing ${uris.length} files...`);
+    }
+  } else {
+    // Normal Mode - use active editor
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      vscode.window.showErrorMessage('No active editor. Please open a file or enable Multi-File Mode.');
+      return;
+    }
+
+    const selection = editor.selection;
+    code = editor.document.getText(selection);
+
+    // If no selection, use entire document
+    if (!code || code.trim().length === 0) {
+      const useEntireDoc = await vscode.window.showWarningMessage(
+        'No code selected. Use entire document?',
+        'Yes',
+        'Cancel'
+      );
+      
+      if (useEntireDoc !== 'Yes') {
+        return;
+      }
+      
+      code = editor.document.getText();
+    }
   }
 
   // Check max length
@@ -170,7 +220,7 @@ async function executeTool(tool: ToolType): Promise<void> {
   
   if (code.length > maxLength) {
     vscode.window.showWarningMessage(
-      `Selected code exceeds ${maxLength} characters. Truncating...`
+      `Code exceeds ${maxLength} characters. Truncating...`
     );
     code = code.substring(0, maxLength);
   }
@@ -209,10 +259,13 @@ async function executeTool(tool: ToolType): Promise<void> {
         if (action === 'Copy to Clipboard') {
           await vscode.env.clipboard.writeText(response.data);
           vscode.window.showInformationMessage('Copied to clipboard');
-        } else if (action === 'Insert at Cursor') {
-          editor.edit((editBuilder) => {
-            editBuilder.insert(editor.selection.active, response.data!);
-          });
+        } else if (action === 'Insert at Cursor' && !filePickerMode) {
+          const editor = vscode.window.activeTextEditor;
+          if (editor) {
+            editor.edit((editBuilder: vscode.TextEditorEdit) => {
+              editBuilder.insert(editor.selection.active, response.data!);
+            });
+          }
         }
       } else {
         vscode.window.showErrorMessage(response.error || 'Request failed');
@@ -231,7 +284,8 @@ function detectLanguage(tool: ToolType): string {
     sqlExplainer: 'markdown',
     generateDocstring: 'python',
     addTypeHints: 'python',
-    mlBoilerplate: 'python'
+    mlBoilerplate: 'python',
+    dataQualityAuditor: 'markdown'
   };
 
   return languageMap[tool] || 'plaintext';

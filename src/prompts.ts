@@ -29,7 +29,49 @@ Return code only, no explanations.`,
 - Model training loop
 - Validation
 - Basic logging
-No explanations.`
+No explanations.`,
+
+  dataQualityAuditor: `Analyze the provided code/query for data quality issues, performance problems, and best practice violations. 
+
+For SQL files, check:
+- Missing indexes on JOIN/WHERE columns
+- SELECT * usage
+- Missing NULL handling
+- Inefficient subqueries
+- Missing table aliases
+- Cartesian products
+
+For Python/Pandas files, check:
+- Inefficient loops (use vectorization)
+- Missing null checks
+- Deprecated pandas methods
+- Memory-inefficient operations
+- Missing data validation
+- Type inconsistencies
+
+Return a structured report in markdown format:
+## 🔍 Data Quality Audit Report
+
+### ⚠️ Critical Issues (X found)
+- [Issue description] - Line X
+  - Impact: [performance/correctness/maintainability]
+  - Fix: [specific suggestion]
+
+### ⚡ Performance Warnings (X found)
+- [Issue description] - Line X
+  - Impact: [estimated impact]
+  - Fix: [specific suggestion]
+
+### 💡 Best Practice Suggestions (X found)
+- [Issue description] - Line X
+  - Recommendation: [specific suggestion]
+
+### ✅ Summary
+- Total issues: X
+- Estimated performance impact: [High/Medium/Low]
+- Recommended priority: [Critical/High/Medium/Low]
+
+Keep it concise and actionable.`
 };
 
 export type ToolType = keyof typeof SYSTEM_PROMPTS;
