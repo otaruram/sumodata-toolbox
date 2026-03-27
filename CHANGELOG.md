@@ -6,7 +6,12 @@ All notable changes to the SumoData Toolbox extension will be documented in this
 
 ### Added
 - Initial release of SumoData Toolbox
-- 9 AI-powered tools for data professionals
+- 🔥 **Data Quality Auditor** - Killer feature for comprehensive multi-file code analysis
+  - Detects critical issues, performance warnings, and best practice violations
+  - Supports Python and SQL files
+  - Generates actionable audit reports with line numbers and fixes
+- 📁 **Multi-File Mode** - Analyze multiple files simultaneously
+- 10 AI-powered tools for data professionals
 - **Sumo Pipes (Data Engineering)**:
   - SQL Optimizer for database query optimization
   - JSON to DDL Schema generator
@@ -23,15 +28,16 @@ All notable changes to the SumoData Toolbox extension will be documented in this
 - Sidebar UI with accordion organization
 - Context menu integration for .py and .sql files
 - Secure API key storage
-- Comprehensive documentation
+- Comprehensive documentation at https://otaruram.github.io/sumodata-toolbox-docs/
 
 ### Features
 - One-click AI code generation and optimization
+- Multi-file code quality auditing
 - Token-efficient prompts
 - Multiple access methods (sidebar, context menu, command palette)
 - Configurable timeout and code length limits
 - Support for streaming responses
-- Dark theme UI with cyan accents
+- Neutral theme colors that adapt to VS Code theme
 
 ### Security
 - Secure API key storage using VS Code SecretStorage
