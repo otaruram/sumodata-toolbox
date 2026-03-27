@@ -13,6 +13,24 @@ export async function activate(context: vscode.ExtensionContext) {
 
   secretManager = new SecretManager(context);
   
+  // Check if this is first activation
+  const hasShownWelcome = context.globalState.get<boolean>('sumodata.hasShownWelcome');
+  if (!hasShownWelcome) {
+    // Show welcome message with documentation link
+    const result = await vscode.window.showInformationMessage(
+      '🎉 Welcome to SumoData Toolbox! Read the documentation to get started.',
+      'Open Documentation',
+      'Maybe Later'
+    );
+    
+    if (result === 'Open Documentation') {
+      vscode.env.openExternal(vscode.Uri.parse('https://otaruram.github.io/sumodata-toolbox-docs/'));
+    }
+    
+    // Mark as shown
+    await context.globalState.update('sumodata.hasShownWelcome', true);
+  }
+  
   // Initialize API provider
   await initializeApiProvider();
 
@@ -79,6 +97,13 @@ function registerCommands(context: vscode.ExtensionContext): void {
           );
         }
       }
+    })
+  );
+
+  // Open Documentation command
+  context.subscriptions.push(
+    vscode.commands.registerCommand('sumodata.openDocs', () => {
+      vscode.env.openExternal(vscode.Uri.parse('https://otaruram.github.io/sumodata-toolbox-docs/'));
     })
   );
 

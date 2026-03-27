@@ -81,6 +81,11 @@
     },
     "commands": [
       {
+        "command": "sumodata.openDocs",
+        "title": "📚 Open Documentation",
+        "category": "SumoData"
+      },
+      {
         "command": "sumodata.sqlOptimizer",
         "title": "SQL Optimizer",
         "category": "SumoData"

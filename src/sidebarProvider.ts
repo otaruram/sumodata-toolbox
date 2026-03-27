@@ -30,6 +30,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           vscode.commands.executeCommand('sumodata.setApiKey');
           break;
         
+        case 'openDocs':
+          vscode.commands.executeCommand('sumodata.openDocs');
+          break;
+        
         case 'changeModel':
           await vscode.workspace.getConfiguration('sumodata').update(
             'model',
@@ -287,6 +291,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     </div>
     
     <a class="api-key-link" onclick="setApiKey()">⚙️ Configure API Key</a>
+    <a class="api-key-link" onclick="openDocs()" style="margin-top: 4px;">📚 Open Documentation</a>
     
     <div style="margin-top: 8px;">
       <label style="font-size: 11px; color: var(--vscode-descriptionForeground);">AI Model:</label>
@@ -377,6 +382,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     function setApiKey() {
       vscode.postMessage({ type: 'setApiKey' });
+    }
+
+    function openDocs() {
+      vscode.postMessage({ type: 'openDocs' });
     }
 
     function changeModel() {

@@ -14,6 +14,17 @@ Supercharge your data workflow with 9 specialized AI tools powered by Sumopod AP
 
 **Keywords:** data engineering tools, machine learning tools, ML engineer, data science, AI code assistant, SQL optimizer, pandas helper, PyTorch tools, scikit-learn, data analyst tools, sumopod extension, AI developer tools, VS Code data tools, database optimization, ETL tools, data pipeline, jupyter notebook, python AI tools
 
+---
+
+## 📚 Documentation
+
+**👉 [Read Full Documentation](https://otaruram.github.io/sumodata-toolbox-docs/) 👈**
+
+- [Getting Started Guide](https://otaruram.github.io/sumodata-toolbox-docs/guide/getting-started)
+- [Features Overview](https://otaruram.github.io/sumodata-toolbox-docs/features/overview)
+- [Configuration](https://otaruram.github.io/sumodata-toolbox-docs/guide/configuration)
+- [Troubleshooting](https://otaruram.github.io/sumodata-toolbox-docs/guide/troubleshooting)
+
 ## ⚠️ Disclaimer
 
 This is an **unofficial, community-powered** extension. Not affiliated with or endorsed by Sumopod.
