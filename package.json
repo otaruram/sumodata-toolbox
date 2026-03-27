@@ -3,7 +3,7 @@
   "displayName": "SumoData Toolbox - AI Tools for Data Engineers & ML",
   "description": "AI-powered tools for Data Engineering, Machine Learning & Data Science. SQL optimizer, pandas helper, ML boilerplate, docstring generator. Powered by Sumopod API.",
   "version": "0.1.0",
-  "publisher": "community",
+  "publisher": "SumoToolbox",
   "engines": {
     "vscode": "^1.80.0"
   },
