@@ -1,0 +1,30 @@
+node_modules
+out
+*.vsix
+.vscode-test
+.DS_Store
+Thumbs.db
+
+# Documentation (separate repo)
+docs/
+
+# IDE
+.idea
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+
+# Build
+dist/
+build/
+
+# Spec files (optional - keep if you want to show your process)
+.kiro/

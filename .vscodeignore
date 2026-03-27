@@ -1,0 +1,13 @@
+.vscode/**
+.vscode-test/**
+src/**
+.gitignore
+tsconfig.json
+**/*.map
+**/*.ts
+!out/**/*.js
+docs/**
+.kiro/**
+test-files/**
+DEPLOY.md
+QUICK_START.md

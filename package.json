@@ -1,0 +1,255 @@
+{
+  "name": "sumodata-toolbox",
+  "displayName": "SumoData Toolbox - AI Tools for Data Engineers & ML",
+  "description": "AI-powered tools for Data Engineering, Machine Learning & Data Science. SQL optimizer, pandas helper, ML boilerplate, docstring generator. Powered by Sumopod API.",
+  "version": "0.1.0",
+  "publisher": "community",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Data Science",
+    "Machine Learning",
+    "Programming Languages",
+    "Snippets",
+    "Formatters",
+    "Linters"
+  ],
+  "keywords": [
+    "data engineering",
+    "machine learning",
+    "ML",
+    "data science",
+    "AI",
+    "sumopod",
+    "SQL optimizer",
+    "pandas",
+    "PyTorch",
+    "scikit-learn",
+    "data analyst",
+    "ML engineer",
+    "data engineer",
+    "AI assistant",
+    "code generator",
+    "docstring",
+    "type hints",
+    "database",
+    "ETL",
+    "data pipeline",
+    "jupyter",
+    "notebook",
+    "python tools",
+    "SQL tools",
+    "AI code helper",
+    "developer tools"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/otaruram/sumodata-toolbox"
+  },
+  "bugs": {
+    "url": "https://github.com/otaruram/sumodata-toolbox/issues"
+  },
+  "homepage": "https://otaruram.github.io/sumodata-toolbox-docs/",
+  "icon": "resources/icon.png",
+  "galleryBanner": {
+    "color": "#0a0e1a",
+    "theme": "dark"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "sumodata-toolbox",
+          "title": "SumoData Toolbox",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "sumodata-toolbox": [
+        {
+          "type": "webview",
+          "id": "sumodata.sidebar",
+          "name": "Sumo Tools"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "sumodata.sqlOptimizer",
+        "title": "SQL Optimizer",
+        "category": "SumoData"
+      },
+      {
+        "command": "sumodata.jsonToDDL",
+        "title": "JSON to DDL Schema",
+        "category": "SumoData"
+      },
+      {
+        "command": "sumodata.cronGenerator",
+        "title": "Cron Expression Generator",
+        "category": "SumoData"
+      },
+      {
+        "command": "sumodata.explainRegex",
+        "title": "Explain Complex Regex",
+        "category": "SumoData"
+      },
+      {
+        "command": "sumodata.pandasCleaner",
+        "title": "Pandas Cleaning Logic Suggester",
+        "category": "SumoData"
+      },
+      {
+        "command": "sumodata.sqlExplainer",
+        "title": "SQL Logic Explainer",
+        "category": "SumoData"
+      },
+      {
+        "command": "sumodata.generateDocstring",
+        "title": "Auto-generate Google-style Docstrings",
+        "category": "SumoData"
+      },
+      {
+        "command": "sumodata.addTypeHints",
+        "title": "Type Hinting for Python",
+        "category": "SumoData"
+      },
+      {
+        "command": "sumodata.mlBoilerplate",
+        "title": "PyTorch/Scikit-learn Training Loop Boilerplate",
+        "category": "SumoData"
+      },
+      {
+        "command": "sumodata.setApiKey",
+        "title": "Set API Key",
+        "category": "SumoData"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "submenu": "sumodata.contextMenu",
+          "group": "sumodata",
+          "when": "editorHasSelection && (resourceExtname == .py || resourceExtname == .sql)"
+        }
+      ],
+      "sumodata.contextMenu": [
+        {
+          "command": "sumodata.sqlOptimizer",
+          "when": "resourceExtname == .sql",
+          "group": "pipes"
+        },
+        {
+          "command": "sumodata.jsonToDDL",
+          "when": "resourceExtname == .sql",
+          "group": "pipes"
+        },
+        {
+          "command": "sumodata.sqlExplainer",
+          "when": "resourceExtname == .sql",
+          "group": "lens"
+        },
+        {
+          "command": "sumodata.explainRegex",
+          "group": "lens"
+        },
+        {
+          "command": "sumodata.pandasCleaner",
+          "when": "resourceExtname == .py",
+          "group": "lens"
+        },
+        {
+          "command": "sumodata.generateDocstring",
+          "when": "resourceExtname == .py",
+          "group": "core"
+        },
+        {
+          "command": "sumodata.addTypeHints",
+          "when": "resourceExtname == .py",
+          "group": "core"
+        },
+        {
+          "command": "sumodata.mlBoilerplate",
+          "when": "resourceExtname == .py",
+          "group": "core"
+        }
+      ]
+    },
+    "submenus": [
+      {
+        "id": "sumodata.contextMenu",
+        "label": "🛡 SumoData"
+      }
+    ],
+    "configuration": {
+      "title": "SumoData Toolbox",
+      "properties": {
+        "sumodata.baseUrl": {
+          "type": "string",
+          "default": "https://ai.sumopod.com",
+          "description": "Base URL for the Sumo API"
+        },
+        "sumodata.timeout": {
+          "type": "number",
+          "default": 30,
+          "description": "Request timeout in seconds"
+        },
+        "sumodata.enableContextMenu": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable context menu commands"
+        },
+        "sumodata.maxCodeLength": {
+          "type": "number",
+          "default": 10000,
+          "description": "Maximum code snippet length in characters"
+        },
+        "sumodata.model": {
+          "type": "string",
+          "default": "claude-haiku-4-5",
+          "enum": [
+            "claude-haiku-4-5",
+            "kimi-k2",
+            "gemini/gemini-2.5-pro",
+            "gemini/gemini-2.0-flash",
+            "gpt-4o-mini",
+            "gpt-5-mini"
+          ],
+          "enumDescriptions": [
+            "Sumo Lightning - Fast and efficient",
+            "Sumo Thunder - Powerful reasoning",
+            "Sumo Titan Pro - Maximum capability",
+            "Sumo Flash - Ultra-fast responses",
+            "Sumo Spark - Balanced performance",
+            "Sumo Nova - Next generation"
+          ],
+          "description": "AI model to use for processing"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^18.x",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.40.0",
+    "typescript": "^5.1.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}
